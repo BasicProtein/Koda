@@ -1,0 +1,16 @@
+app:
+  default_template: ""
+  workspace_root: "workspace"
+  runs_root: "runs"
+llm:
+  provider: "openai"  # or anthropic
+  api_key: ""
+  model: ""
+  base_url: ""         # optional, e.g. https://api.openai.com/v1
+  temperature: 0.2
+  max_tokens: 4000
+latex:
+  compiler: "latexmk"  # latexmk or pdflatex
+  compiler_path: ""    # optional full path
+pdf:
+  render_dpi: 150
