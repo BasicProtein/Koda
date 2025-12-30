@@ -35,13 +35,13 @@ def _call_openai(prompt: str, cfg: dict) -> str:
         client_kwargs['base_url'] = base_url
 
     client = OpenAI(api_key=cfg['llm']['api_key'], **client_kwargs)
-    resp = client.responses.create(
+    resp = client.chat.completions.create(
         model=cfg['llm']['model'],
-        input=prompt,
+        messages=[{'role': 'user', 'content': prompt}],
         temperature=cfg['llm'].get('temperature', 0.2),
-        max_output_tokens=cfg['llm'].get('max_tokens', 4000),
+        max_tokens=cfg['llm'].get('max_tokens', 4000),
     )
-    return resp.output_text
+    return resp.choices[0].message.content
 
 
 def _call_anthropic(prompt: str, cfg: dict) -> str:

@@ -1,7 +1,21 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# LaTeX
 *.log
 *.aux
 *.out
@@ -9,7 +23,29 @@ __pycache__/
 *.synctex.gz
 *.fls
 *.fdb_latexmk
-*.pdf
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# Koda specific
 workspace/
 runs/
+*.pdf
+
+# Environment and Config
 .env
+config.local.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,12 +1,173 @@
-我想做一个项目：有了 codex 和 cc 之后，我现在做科研论文分享 PPT 基本是“流水线”：下载 arXiv LaTeX 源码 → 丢进模板文件夹 → 让 Codex/cc 直接生成 Beamer 正文 → 编译 → 逐页修溢出。
-优点很直白：几乎不用手工搬公式/表格/图注，初稿出来就有“论文味”，最后只做边界检查和少量排版。
+# Koda
+
+> 自动化生成学术组会 Beamer PPT 的智能工具
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-brightgreen.svg)](https://streamlit.io/)
+
+## 📖 简介
+
+**Koda** 是一个基于 AI 的学术演示文稿生成工具，专门用于从 arXiv 论文自动生成高质量的 Beamer PPT。
+
+### 工作流程
+
+```
+arXiv论文ID → 下载LaTeX源码 → AI生成Beamer → 编译PDF → 逐页修复溢出
+```
+
+### 核心优势
+
+- ✅ **自动化**：一键从 arXiv 下载、解析、生成、编译
+- ✅ **保真度高**：直接使用论文的 LaTeX 源码，公式/表格/图注完美保留
+- ✅ **组会风格**：方法详细、公式完整、实验+消融分析清晰
+- ✅ **可编辑**：生成后可逐页修复，支持 AI 辅助优化
+- ✅ **灵活配置**：支持自定义 Beamer 模板、AI 提示词
+
+## 🚀 快速开始
+
+### 前置要求
+
+1. **Python 3.10+**
+2. **LaTeX环境** (TeX Live / MacTeX)
+3. **LLM API密钥** (OpenAI / Anthropic)
+
+### 安装
+
+```bash
+# 克隆项目
+git clone https://github.com/your-username/Koda.git
+cd Koda
+
+# 安装依赖
+pip install -r requirements.txt
+```
+
+### 配置
+
+编辑 `config.yaml`：
+
+```yaml
+llm:
+  provider: "openai"          # 或 "anthropic"
+  api_key: "YOUR_API_KEY"     # 填入您的API密钥
+  model: "gpt-4o"             # 或 "claude-3-5-sonnet-20241022"
+```
+
+### 运行
+
+```bash
+streamlit run app.py
+```
+
+在浏览器中：
+1. 输入 arXiv ID（如 `2312.12345`）
+2. 选择 Beamer 模板
+3. 点击 "Generate + Compile"
+4. 等待 1-3 分钟，查看生成的 PPT
+
+## 📚 文档
+
+- [部署文档](docs/deployment.md) - 详细的环境配置和安装指南
+- [使用指南](docs/user_guide.md) - 完整的功能说明和最佳实践
+- [任务清单](docs/task_list.md) - 开发进度和未来规划
+
+## 🎯 适用场景
+
+✅ **推荐使用**：
+- 论文在 arXiv 上，且有 LaTeX 源码
+- 准备博士组会、实验室内部讨论
+- 需要"技术型"分享：方法细、公式全、实验详细
+- 已有常用的 Beamer 模板
+
+❌ **不推荐**：
+- 纯 PDF 论文（无 LaTeX 源码）
+- 纯理论证明论文（公式过于密集）
+- 大众科普型演讲
+
+## 💡 使用示例
+
+### 示例：生成 Vision Transformer 论文的 PPT
+
+```
+arXiv ID: 2010.11929
+模板: assets/templates/example_template.tex
+运行名称: vit_paper_2024
+```
+
+生成结果：
+- 标题页
+- 动机与问题定义
+- 方法（拆分为 3-4 页）
+- 实验设置
+- 主要结果对比表
+- 消融实验分析
+- 可视化
+- 结论
+
+---
+
+## 🛠 技术栈
+
+| 模块 | 技术 |
+|-----|------|
+| 编程语言 | Python 3.10+ |
+| UI框架 | Streamlit |
+| LLM集成 | OpenAI / Anthropic SDK |
+| LaTeX编译 | latexmk / pdflatex |
+| PDF处理 | PyMuPDF |
+| 数据源 | arxiv (Python库) |
+
+## 📂 项目结构
+
+```
+Koda/
+├── app.py                 # Streamlit主应用
+├── config.yaml            # 配置文件
+├── requirements.txt       # Python依赖
+├── core/                  # 核心功能模块
+│   ├── fetcher.py         # arXiv下载
+│   ├── parser.py          # LaTeX解析
+│   ├── generator.py       # LLM调用
+│   └── compiler.py        # LaTeX编译
+├── utils/                 # 工具函数
+│   └── pdf_renderer.py    # PDF渲染
+├── assets/
+│   ├── AGENTS.md          # AI Prompt模板
+│   └── templates/         # Beamer模板库
+├── docs/                  # 文档
+│   ├── deployment.md      # 部署指南
+│   ├── user_guide.md      # 使用手册
+│   └── task_list.md       # 任务清单
+├── workspace/             # 临时工作目录（自动生成）
+└── runs/                  # 运行日志（自动生成）
+```
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License
+
+---
+
+## 📝 原始设计思路
+
+以下是项目的原始设计文档和技术规划：
+
+---
+
+我想做一个项目：有了 codex 和 cc 之后，我现在做科研论文分享 PPT 基本是"流水线"：下载 arXiv LaTeX 源码 → 丢进模板文件夹 → 让 Codex/cc 直接生成 Beamer 正文 → 编译 → 逐页修溢出。
+优点很直白：几乎不用手工搬公式/表格/图注，初稿出来就有"论文味"，最后只做边界检查和少量排版。
 
 0. 适用范围
 适用：
 
 论文在 arXiv 上，能下到 LaTeX source（强烈建议别用 PDF 去抠）
 你有一份常用 Beamer 模板（实验室模板/公开模板都行）
-你想要“组会风格”：方法细、公式全、实验+消融讲清楚
+你想要"组会风格"：方法细、公式全、实验+消融讲清楚
 电脑可以编译 latex
 1. 建一个干净的工作目录（建议每篇论文一个文件夹）
 每篇论文我都会单独开一个文件夹，把两样东西放到一起就行：arXiv 的 LaTeX 源码（解压后）+ 你的 Beamer 模板（template.tex）。
@@ -29,17 +190,17 @@ talk.tex（或 talk_body.tex）里 \begin{document} 到 \end{document} 的正文
 
 按 AGENTS.md 的规则，读取 template.tex 和 paper_src/ 的论文 LaTeX 源码，生成 Beamer 正文（只输出 document 环境内容），方法部分保留原公式，实验给主结果+消融表，整套按 columns 排版并避免一页太挤。
 AGENTS.md# Role
-你是资深学术组会 PPT（LaTeX Beamer）开发者。目标是为博士组会生成技术型分享：方法细、公式全、实验/消融讲清楚。# Inputs (Files in this folder)- Beamer 模板：`template.tex`（包含 preamble/theme/title page 等风格定义）- 论文 LaTeX 源码目录：`paper_src/`（包含论文正文、公式、表格、图注）# Output (Strict)- 只生成 Beamer 正文：仅输出 `\begin{document}` 到 `\end{document}` 之间的内容- 不要输出解释性文字、不要输出模板 preamble、不要新增可能冲突的宏包- 输出必须可编译（在既有模板下）# Talk Structure (Group meeting style)1. Title Page（使用模板的标题页命令/字段）2. Motivation & Problem Definition   - 任务/问题定义（沿用论文符号）   - 现有方法限制（gap，2-3 点即可）   - 本文核心 insight（1-2 句）3. Methodology（高优先级，必须拆成多页）   - Overview：整体框架与数据流   - Module Breakdown：关键模块逐页讲清楚（输入/输出/关键设计）   - 使用论文原始公式（不要过度简化数学）   - 给出训练目标/损失函数（总 loss + 分项）4. Experiments   - Setup：数据集、指标（如 SR/SPL）、实现细节（backbone/训练设置）   - Main Results：对比表（简化成 beamer 表格）   - Ablation：消融表 + 结论解释（为什么掉/为什么提升）   - Qualitative：可视化/失败案例（用占位图）5. Conclusion   - 贡献总结（3 点内）   - 局限   - Future work# Layout Rules (MTU3D-like)- 大量使用 `columns`：  - 左列 0.45\textwidth：要点（bullet）  - 右列 0.55\textwidth：图/表（占位图或简化表格）- 每页最多 5–7 条 bullet；超过必须拆页（Method I/II/III…）- 禁止把 Method 挤成一页；宁可多页也要可读# Figures/Tables- 图片统一用占位文件名，方便用户后续替换：  - `fig_architecture.png`, `fig_module1.png`, `fig_qualitative.png`- 表格从论文表格抽取，做“能讲清结论”的简化版：  - 保留关键 baseline + 本文方法  - 保留关键指标列（如 SR/SPL/Success 等）  - 最好成绩加粗（\textbf{}）  - 列太多就删列或拆表，不要硬 resize 到看不清# Text Style- 组会口吻：偏技术、偏分析，不要写成泛泛的科普总结- 符号命名以论文为准，全文一致- 不要堆砌形容词；每条 bullet 都要“信息密度高、可讲”# Safety- 不要引入新的宏包- 不要改动模板风格定义- 如果某些图/表无法从源码直接得到，就放占位并在 bullet 里注明“(placeholder)”
+你是资深学术组会 PPT（LaTeX Beamer）开发者。目标是为博士组会生成技术型分享：方法细、公式全、实验/消融讲清楚。# Inputs (Files in this folder)- Beamer 模板：`template.tex`（包含 preamble/theme/title page 等风格定义）- 论文 LaTeX 源码目录：`paper_src/`（包含论文正文、公式、表格、图注）# Output (Strict)- 只生成 Beamer 正文：仅输出 `\begin{document}` 到 `\end{document}` 之间的内容- 不要输出解释性文字、不要输出模板 preamble、不要新增可能冲突的宏包- 输出必须可编译（在既有模板下）# Talk Structure (Group meeting style)1. Title Page（使用模板的标题页命令/字段）2. Motivation & Problem Definition   - 任务/问题定义（沿用论文符号）   - 现有方法限制（gap，2-3 点即可）   - 本文核心 insight（1-2 句）3. Methodology（高优先级，必须拆成多页）   - Overview：整体框架与数据流   - Module Breakdown：关键模块逐页讲清楚（输入/输出/关键设计）   - 使用论文原始公式（不要过度简化数学）   - 给出训练目标/损失函数（总 loss + 分项）4. Experiments   - Setup：数据集、指标（如 SR/SPL）、实现细节（backbone/训练设置）   - Main Results：对比表（简化成 beamer 表格）   - Ablation：消融表 + 结论解释（为什么掉/为什么提升）   - Qualitative：可视化/失败案例（用占位图）5. Conclusion   - 贡献总结（3 点内）   - 局限   - Future work# Layout Rules (MTU3D-like)- 大量使用 `columns`：  - 左列 0.45\textwidth：要点（bullet）  - 右列 0.55\textwidth：图/表（占位图或简化表格）- 每页最多 5–7 条 bullet；超过必须拆页（Method I/II/III…）- 禁止把 Method 挤成一页；宁可多页也要可读# Figures/Tables- 图片统一用占位文件名，方便用户后续替换：  - `fig_architecture.png`, `fig_module1.png`, `fig_qualitative.png`- 表格从论文表格抽取，做"能讲清结论"的简化版：  - 保留关键 baseline + 本文方法  - 保留关键指标列（如 SR/SPL/Success 等）  - 最好成绩加粗(\textbf{})  - 列太多就删列或拆表，不要硬 resize 到看不清# Text Style- 组会口吻：偏技术、偏分析，不要写成泛泛的科普总结- 符号命名以论文为准，全文一致- 不要堆砌形容词；每条 bullet 都要"信息密度高、可讲"# Safety- 不要引入新的宏包- 不要改动模板风格定义- 如果某些图/表无法从源码直接得到，就放占位并在 bullet 里注明"(placeholder)"
 AGENTS.md# Role
 You are an expert academic researcher and a LaTeX Beamer developer. I need you to create a high-quality presentation for a **doctoral group meeting** based on a research paper.# Inputs Provided
 I will provide you with two distinct blocks of text:1.  **The Beamer Template Code:** This contains the preamble, theme definitions, custom packages, and title page setup.2.  **The Paper's LaTeX Source:** The raw content of the research paper (including abstract, intro, method, experiments, etc.).# Task
 Your goal is to generate the **body content** of the Beamer presentation (everything between `\begin{document}` and `\end{document}`) by extracting information from the **Paper's LaTeX Source** and formatting it strictly according to the style defined in the **Beamer Template Code**.# Content & Logic Requirements (Modeled after "MTU3D" Logic)
 Since this is for a **group meeting**, the focus must be on technical depth, methodology details, and experimental analysis, not just a high-level summary. Structure the presentation as follows:1.  **Title Page:** Use the commands from my template (e.g., `\title`, `\author`, `\institute`).2.  **Motivation & Problem Definition:**    * What is the specific problem? (e.g., Embodied Navigation, 3D Grounding).    * What are the limitations of existing methods? (The "Gap").    * What is the core insight of this paper?3.  **Methodology (High Priority - Split into Multiple Slides):**    * **Overview:** High-level framework diagram explanation.    * **Module Breakdown:** Create separate slides for key technical components found in the paper source (e.g., "Online Query Representation," "Dynamic Memory Bank," "Joint Optimization/Loss Functions").    * *Instruction:* Use the actual equations from the paper source. Do not simplify the math too much; PhD students need to see the formulas.4.  **Experiments:**    * **Setup:** Datasets, Metrics (e.g., SR, SPL).    * **Main Results:** Comparison tables (convert paper tables to simplified Beamer tables).    * **Ablation Studies:** Crucial for group meetings. Why does each module work?    * **Qualitative/Visualization:** Placeholders for trajectory or segmentation visualizations.5.  **Conclusion:** Summary and Future Work.# Formatting & Layout Constraints1.  **Layout Strategy:** Mimic the "MTU3D" style by extensively using the `columns` environment.    * **Left Column (0.4-0.5\textwidth):** Explanatory bullet points.    * **Right Column (0.5-0.6\textwidth):** Figure placeholder (`\includegraphics...`).2.  **Preventing Overflow (Strict Rule):**    * **Max 5-7 bullet points** per slide.    * If a methodology section is dense, **split it** into "Methodology I", "Methodology II", etc. Never squeeze too much text into one frame.3.  **Figure Handling:**    * Use the figure captions from the paper source to write the slide titles or descriptions.    * Use generic filenames for images (e.g., `fig_architecture.png`, `tab_results.png`) so I can replace them later.4.  **LaTeX Consistency:** Ensure the code compiles with the **Beamer Template Code** I provided. Do not introduce packages that conflict with my template.
-3. 逐页修溢出：我一般只让模型改“这一页”
+3. 逐页修溢出：我一般只让模型改"这一页"
 最省事的交互方式：把出问题的 frame 原样贴给模型，让它只改这一页（必要时拆成两页）。
 我常用的修边prompt长这样：
 
-“下面这个 frame #number 溢出了。只改这一页：最多 6 条 bullet；允许拆成两页；公式符号保持论文一致；表格不要 resize 太狠。输出替换后的 frame 代码。”
+"下面这个 frame #number 溢出了。只改这一页：最多 6 条 bullet；允许拆成两页；公式符号保持论文一致；表格不要 resize 太狠。输出替换后的 frame 代码。"
 然后贴：
 
 该 frame 的 LaTeX
@@ -48,12 +209,12 @@ log 里 Overfull 提示那一行（可选）
 
 拆页（Method II/III、Ablation I/II）——最稳
 表格：删列/删行/拆表（比 \resizebox 更可读）
-公式：align 断行、把 “where …” 放 bullet 里
+公式：align 断行、把 "where …" 放 bullet 里
 字号：只对局部 \small/\scriptsize（别全局缩，观感很惨）
 图：右栏图缩一点，或者减少一张图
 4. 结尾：这套流程我觉得值的点
 arXiv 源码是最干净的信息源：公式/表格/图注本来就是结构化的，模型搬运+重排比你手动快太多
-AGENTS.md 把“输出形态”锁死后，模型就更像“排版工+助教”，而不是“写作文选手”
+AGENTS.md 把"输出形态"锁死后，模型就更像"排版工+助教"，而不是"写作文选手"
 最后只剩一个工作：逐页把溢出修掉（这部分反而很好外包给模型做）
 然后就可以尽情摸鱼了（甚至可以让生成一个对应的稿子，偷偷照着读）
 
@@ -61,9 +222,9 @@ AGENTS.md 把“输出形态”锁死后，模型就更像“排版工+助教”
 
 
 
-你说得对。兵马未动，粮草先行。如果不先把技术栈定死，后面写代码就会变成“面多了加水，水多了加面”。
+你说得对。兵马未动，粮草先行。如果不先把技术栈定死，后面写代码就会变成"面多了加水，水多了加面"。
 
-针对 **Koda** 这种“文本重构 + 编译器调用 + 视觉反馈”的工具，我推荐一套**“轻量级 Python + 交互式 Web UI”**的技术栈。
+针对 **Koda** 这种"文本重构 + 编译器调用 + 视觉反馈"的工具，我推荐一套**"轻量级 Python + 交互式 Web UI"**的技术栈。
 
 这是我认为性价比最高的组合：
 
@@ -72,7 +233,7 @@ AGENTS.md 把“输出形态”锁死后，模型就更像“排版工+助教”
 | **模块**       | **技术选型**                               | **理由**                                                     |
 | -------------- | ------------------------------------------ | ------------------------------------------------------------ |
 | **编程语言**   | **Python 3.10+**                           | 不二之选。拥有最强的 arXiv 库、最方便的文本处理能力，且是 LLM 调用的原生环境。 |
-| **UI 框架**    | **Streamlit**                              | **关键决策点**。不要写 CLI，也不要写 Electron。 你需要一边看 PDF 预览，一边点“修复这一页”。Streamlit 可以让你用 Python 极速写出带“左侧控制台 + 右侧 PDF 预览”的界面。 |
+| **UI 框架**    | **Streamlit**                              | **关键决策点**。不要写 CLI，也不要写 Electron。 你需要一边看 PDF 预览，一边点"修复这一页"。Streamlit 可以让你用 Python 极速写出带"左侧控制台 + 右侧 PDF 预览"的界面。 |
 | **LLM 交互**   | **Anthropic SDK / OpenAI SDK**             | 建议直连，**不使用** LangChain。 原因：你的 Prompt (`AGENTS.md`) 非常结构化且长，LangChain 的抽象层反而会增加调试难度。直接封装一个 `call_llm(prompt, context)` 函数最稳。 |
 | **LaTeX 编译** | **Local TeXLive (latexmk 优先)**           | 必须依赖本地环境。Python 通过 `subprocess` 调用系统命令。latexmk 更稳，自动处理多次编译和引用。 |
 | **PDF 处理**   | **PyMuPDF (fitz)**                         | Windows 上更省心，不依赖 poppler；可直接把 PDF 页面渲染成图片用于 Streamlit 预览。 |
@@ -84,21 +245,21 @@ AGENTS.md 把“输出形态”锁死后，模型就更像“排版工+助教”
 
 #### 1. 后端逻辑 (Python)
 
-这是项目的“大脑”，负责脏活累活。
+这是项目的"大脑"，负责脏活累活。
 
 - **`arxiv`**: 用于 `search` 和 `download_source`。
 - **`tarfile` & `zipfile`**: arXiv 的源码通常是 `.tar.gz`，需要自动解压。
 - **`regex` (re)**: **这是核心中的核心**。你需要用正则做以下清洗：
   - 去除 LaTeX 注释 (`%` 开头的内容)，节省 Token。
   - 扁平化文件：识别 `\input{sections/intro.tex}`、`\include{...}`、`\subfile{...}`、`\import{...}`，把子文件内容读出来替换进去，把多文件合并成一个长 String 给 LLM。
-  - 提取 `\begin{frame}` 到 `\end{frame}` 的块，用于后续的“单页修复”。
+  - 提取 `\begin{frame}` 到 `\end{frame}` 的块，用于后续的"单页修复"。
 - **`tenacity`**: 调用 LLM 时的重试机制（网络波动是常态）。
 
 #### 2. 用户界面 (Streamlit)
 
-这是你的“控制台”。为什么我强烈推荐 Streamlit 而不是 CLI？
+这是你的"控制台"。为什么我强烈推荐 Streamlit 而不是 CLI？
 
-因为你的第 3 步是 “逐页修溢出”。
+因为你的第 3 步是 "逐页修溢出"。
 
 - **CLI 体验**：
 
@@ -116,7 +277,7 @@ AGENTS.md 把“输出形态”锁死后，模型就更像“排版工+助教”
 
   - **左栏**：显示每一页生成的 LaTeX 源码（Text Area）。
   - **右栏**：显示对应页的渲染图。
-  - **交互**：右边看到第 5 页溢出了 -> 左边点击“Auto Fix This Slide”按钮 -> 局部调用 LLM -> 局部重编译 -> 右侧图片自动刷新。
+  - **交互**：右边看到第 5 页溢出了 -> 左边点击"Auto Fix This Slide"按钮 -> 局部调用 LLM -> 局部重编译 -> 右侧图片自动刷新。
   - *评价：丝滑。*
 
 #### 3. 编译环境 (System)
@@ -156,7 +317,7 @@ Koda/
 1. **为什么不选 PyQt/Tkinter？**
    - 开发太慢，界面太丑。你需要把精力花在 Prompt Tuning 上，而不是调整按钮的 padding。
 2. **为什么不选 Web 前端 (React/Vue) + FastAPI？**
-   - 杀鸡用牛刀。你是单人开发，前后端分离会增加一倍的工作量。Streamlit 是“全栈 Python”，写完逻辑界面就有了。
+   - 杀鸡用牛刀。你是单人开发，前后端分离会增加一倍的工作量。Streamlit 是"全栈 Python"，写完逻辑界面就有了。
 
 ### 现在的行动点
 
@@ -169,4 +330,3 @@ Koda/
 3. 拥有 OpenAI 或 Anthropic 的 API Key。
 
 如果这三点都没问题，我们可以直接开始写 **Core 模块的 MVP**（最小可行性产品）。你觉得如何？
-
