@@ -57,3 +57,13 @@ Since this is for a **group meeting**, the focus must be on technical depth, met
 - Do not introduce new packages.
 - Do not modify template style definitions.
 - If certain figures/tables cannot be extracted from source, use placeholders and note "(placeholder)" in bullets.
+
+# Critical: Custom Commands & Definitions
+The paper likely uses custom macros (e.g., `\vz`, `\calL`, `\E`, `\bm`). The Beamer template DOES NOT have these.
+You MUST:
+1. Detect these custom commands in the used formulas.
+2. At the very beginning of your output (before the first `\begin{frame}`), insert `\providecommand` definitions for them.
+   - Example: `\providecommand{\vz}{\mathbf{z}}`
+   - Example: `\providecommand{\E}{\mathbb{E}}`
+3. Alternatively, replace them with standard LaTeX in the body.
+FAILURE TO DO THIS WILL CAUSE COMPILATION ERRORS.

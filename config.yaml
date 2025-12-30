@@ -10,7 +10,7 @@ llm:
   temperature: 0.2
   max_tokens: 4000
 latex:
-  compiler: "latexmk"  # or pdflatex
+  compiler: "pdflatex"  # switched from latexmk due to missing perl
   retries: 2
   bin_path: "E:/Software/MiKTeX/MiKTeX/miktex/bin/x64"
 pdf:

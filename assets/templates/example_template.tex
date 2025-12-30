@@ -13,6 +13,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{hyperref}
+\usepackage{lmodern} % Solves miktex-makemf font errors by using installable vector fonts
 
 % Title Information
 \title[Short Title]{Paper Title}
@@ -25,11 +26,64 @@
 \date{\today}
 
 % Custom commands (optional)
-\newcommand{\RR}{\mathbb{R}}
-\newcommand{\NN}{\mathbb{N}}
+% ===========================
+% Extra math macros from paper
+% (Safe to paste in beamer preamble)
+% ===========================
 
-% Remove navigation symbols
-\setbeamertemplate{navigation symbols}{}
+% Packages needed
+\usepackage{amsmath, amsfonts, bm}
 
-% Footer
-\setbeamertemplate{footline}[frame number]
+% ---------- Bold vectors ----------
+\providecommand{\vzero}{\bm{0}}
+\providecommand{\vone}{\bm{1}}
+\providecommand{\vx}{\bm{x}}
+\providecommand{\vy}{\bm{y}}
+\providecommand{\vz}{\bm{z}}
+\providecommand{\vh}{\bm{h}}
+\providecommand{\vw}{\bm{w}}
+\providecommand{\vu}{\bm{u}}
+\providecommand{\vv}{\bm{v}}
+\providecommand{\vg}{\bm{g}}
+\providecommand{\vr}{\bm{r}}
+\providecommand{\vb}{\bm{b}}
+\providecommand{\vtheta}{\bm{\theta}}
+\providecommand{\vphi}{\bm{\phi}}
+
+% ---------- Calligraphic sets ----------
+\providecommand{\calL}{\mathcal{L}}
+\providecommand{\calD}{\mathcal{D}}
+\providecommand{\calX}{\mathcal{X}}
+\providecommand{\calZ}{\mathcal{Z}}
+\providecommand{\calH}{\mathcal{H}}
+\providecommand{\calO}{\mathcal{O}}
+
+% ---------- Operators ----------
+\DeclareMathOperator{\MLP}{MLP}
+\DeclareMathOperator{\LN}{LN}
+\DeclareMathOperator{\softmax}{softmax}
+\DeclareMathOperator{\sigmoid}{sigmoid}
+\DeclareMathOperator{\relu}{ReLU}
+
+% ---------- Frequently used math shorthands ----------
+\providecommand{\E}{\mathbb{E}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\providecommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+
+% Document Body
+% ===========================
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item This is a placeholder slide to verify compilation.
+    \item The \texttt{lmodern} package has been added to prevent font generation errors.
+  \end{itemize}
+\end{frame}
+
+\end{document}
