@@ -1,4 +1,5 @@
 import subprocess
+import os
 from pathlib import Path
 
 
@@ -19,11 +20,22 @@ def compile_latex(talk_tex: Path, template_path: str, work_dir: Path, cfg: dict)
     compiler = cfg['latex']['compiler']
     compiler_path = cfg['latex'].get('compiler_path') or compiler
     if compiler == 'latexmk':
-        cmd = [compiler_path, '-pdf', out_tex.name]
+        cmd = [compiler, '-pdf', '-xelatex', '-interaction=nonstopmode', '-output-directory=.', str(out_tex.name)]
+    elif compiler == 'pdflatex':
+        cmd = [compiler, '-interaction=nonstopmode', '-output-directory=.', str(out_tex.name)]
     else:
+        # Fallback to original behavior for other compilers if not latexmk or pdflatex
         cmd = [compiler_path, out_tex.name]
 
-    _run(cmd, work_dir)
+    env = os.environ.copy()
+    if 'bin_path' in cfg.get('latex', {}):
+        bin_path = str(Path(cfg['latex']['bin_path']).resolve())
+        env['PATH'] = f"{bin_path}{os.pathsep}{env['PATH']}"
+
+    try:
+        subprocess.run(cmd, cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f"LaTeX compile error:\n{exc.stderr.decode('utf-8', errors='ignore')}") from exc
 
     pdf_path = work_dir / 'main.pdf'
     if not pdf_path.exists():

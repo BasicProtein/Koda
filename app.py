@@ -169,42 +169,6 @@ def apply_apple_design():
         letter-spacing: -0.01em;
     }
     
-    /* 语言切换器 */
-    .language-switcher {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        z-index: 9999;
-        background: rgba(255, 255, 255, 0.72);
-        backdrop-filter: saturate(180%) blur(20px);
-        border-radius: 8px;
-        padding: 0.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.04);
-    }
-    
-    .language-switcher button {
-        background: transparent;
-        border: none;
-        color: #86868B;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-    }
-    
-    .language-switcher button.active {
-        background: #007AFF;
-        color: white;
-    }
-    
-    .language-switcher button:hover:not(.active) {
-        color: #007AFF;
-        background: rgba(0, 122, 255, 0.1);
-    }
-    
     /* 侧边栏 - Apple风格的毛玻璃 */
     [data-testid="stSidebar"] {
         background: rgba(255, 255, 255, 0.72);
@@ -221,8 +185,8 @@ def apply_apple_design():
         letter-spacing: -0.01em;
     }
     
-    /* 输入框 - Apple风格 */
-    .stTextInput input, .stNumberInput input {
+    /* 输入框和选择框 - Apple风格 */
+    .stTextInput input, .stNumberInput input, .stSelectbox select {
         border: 1px solid #D2D2D7;
         border-radius: 8px;
         padding: 0.625rem 0.875rem;
@@ -232,7 +196,7 @@ def apply_apple_design():
         color: #1D1D1F;
     }
     
-    .stTextInput input:focus, .stNumberInput input:focus {
+    .stTextInput input:focus, .stNumberInput input:focus, .stSelectbox select:focus {
         border-color: #007AFF;
         box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
         outline: none;
@@ -240,6 +204,28 @@ def apply_apple_design():
     
     .stTextInput input::placeholder, .stNumberInput input::placeholder {
         color: #86868B;
+    }
+    
+    /* Selectbox特殊样式 */
+    .stSelectbox {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text";
+    }
+    
+    .stSelectbox label {
+        color: #1D1D1F;
+        font-weight: 500;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stSelectbox div[data-baseweb="select"] {
+        border-radius: 8px;
+    }
+    
+    .stSelectbox div[data-baseweb="select"] > div {
+        border-color: #D2D2D7;
+        border-radius: 8px;
+        background-color: #FFFFFF;
     }
     
     /* Label文字 */
@@ -451,19 +437,34 @@ def main() -> None:
     
     lang = st.session_state['language']
     
-    # 语言切换器（右上角）
-    col1, col2, col3 = st.columns([0.8, 0.1, 0.1])
+    # 语言切换器（右上角下拉菜单）
+    col1, col2 = st.columns([0.85, 0.15])
     with col2:
-        if st.button('EN', key='lang_en', use_container_width=True):
-            st.session_state['language'] = 'en'
-            st.rerun()
-    with col3:
-        if st.button('中文', key='lang_zh', use_container_width=True):
-            st.session_state['language'] = 'zh'
+        language_options = {
+            'English': 'en',
+            '中文': 'zh'
+        }
+        
+        # 获取当前语言的显示名称
+        current_display = [k for k, v in language_options.items() if v == lang][0]
+        
+        selected_lang = st.selectbox(
+            'Language',
+            options=list(language_options.keys()),
+            index=list(language_options.keys()).index(current_display),
+            label_visibility='collapsed',
+            key='lang_selector'
+        )
+        
+        # 更新语言
+        if language_options[selected_lang] != lang:
+            st.session_state['language'] = language_options[selected_lang]
             st.rerun()
     
     # 主标题
-    st.markdown(f'<h1>{get_text("title", lang)}</h1>', unsafe_allow_html=True)
+    with col1:
+        st.markdown(f'<h1>{get_text("title", lang)}</h1>', unsafe_allow_html=True)
+    
     st.markdown(f'<p class="subtitle">{get_text("subtitle", lang)}</p>', unsafe_allow_html=True)
     
     cfg = load_config('config.yaml')

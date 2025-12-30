@@ -10,7 +10,8 @@ llm:
   temperature: 0.2
   max_tokens: 4000
 latex:
-  compiler: "latexmk"  # latexmk or pdflatex
-  compiler_path: ""    # optional full path
+  compiler: "latexmk"  # or pdflatex
+  retries: 2
+  bin_path: "E:/Software/MiKTeX/MiKTeX/miktex/bin/x64"
 pdf:
   render_dpi: 150
