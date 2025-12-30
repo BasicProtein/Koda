@@ -66,7 +66,31 @@ def _call_llm(prompt: str, cfg: dict) -> str:
         return _call_openai(prompt, cfg)
     if provider == 'anthropic':
         return _call_anthropic(prompt, cfg)
+    if provider == 'deepseek':
+        return _call_deepseek(prompt, cfg)
     raise ValueError('Unsupported LLM provider')
+
+
+def _call_deepseek(prompt: str, cfg: dict) -> str:
+    """调用DeepSeek API（使用OpenAI兼容格式）"""
+    try:
+        from openai import OpenAI
+    except Exception as exc:
+        raise RuntimeError('openai package is required for DeepSeek') from exc
+
+    # DeepSeek使用OpenAI兼容的API
+    client = OpenAI(
+        api_key=cfg['llm']['api_key'],
+        base_url='https://api.deepseek.com'
+    )
+    
+    resp = client.chat.completions.create(
+        model=cfg['llm'].get('model', 'deepseek-chat'),
+        messages=[{'role': 'user', 'content': prompt}],
+        temperature=cfg['llm'].get('temperature', 0.2),
+        max_tokens=cfg['llm'].get('max_tokens', 4000),
+    )
+    return resp.choices[0].message.content
 
 
 def generate_beamer_body(paper_tex: str, agents_path: Path, cfg: dict, run_dir: Path) -> str:

@@ -1,12 +1,12 @@
 app:
-  default_template: ""
+  default_template: "assets/templates/example_template.tex"
   workspace_root: "workspace"
   runs_root: "runs"
 llm:
-  provider: "openai"  # or anthropic
-  api_key: ""
-  model: ""
-  base_url: ""         # optional, e.g. https://api.openai.com/v1
+  provider: "deepseek"  # openai, anthropic, or deepseek
+  api_key: "sk-752d8299daf54ce49630e6d79ffb5515"
+  model: "deepseek-chat"
+  base_url: ""         # optional, deepseek uses https://api.deepseek.com
   temperature: 0.2
   max_tokens: 4000
 latex:
